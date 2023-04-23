@@ -29,7 +29,7 @@ exit /B
 
 :vector3.cross  <a:vector3> <b:vector3> <return:vector3*>
 for /F "tokens=1-6 delims= " %%A in ("%~1 %~2") do (
-    set /a "_x=((%%B*%%F)>>8) - ((%%C*%%E)>>8), _y=((%%C*%%D)>>8) - ((%%A*%%F)>>8), _z=((%%A*%%E)>>8) + ((%%B*%%D)>>8)"
+    set /a "_x=((%%B*%%F)>>8) - ((%%C*%%E)>>8), _y=((%%C*%%D)>>8) - ((%%A*%%F)>>8), _z=((%%A*%%E)>>8) - ((%%B*%%D)>>8)"
     set "%~3=!_x! !_y! !_z!"
 )
 set "_x="

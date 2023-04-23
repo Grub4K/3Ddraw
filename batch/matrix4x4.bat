@@ -102,9 +102,12 @@ exit /B
 
 :matrix4x4.yaw_pitch_roll  <yaw:int> <pitch:int> <roll:int> <result:matrix4x4*>
 call :matrix4x4.rot_x %~2 %~4
+echo !%~4!
 call :matrix4x4.rot_y %~3 rot_temp
+echo !rot_temp!
 call :matrix4x4.mul "!%~4!" "!rot_temp!" %~4
 call :matrix4x4.rot_z %~1 rot_temp
+echo !rot_temp!
 call :matrix4x4.mul "!rot_temp!" "!%~4!" %~4
 set "rot_temp="
 exit /B

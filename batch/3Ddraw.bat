@@ -1,6 +1,6 @@
 @echo off
 setlocal
-set /a "res_x=60, res_y=45"
+set /a "res_x=40, res_y=30"
 :: set /a "res_x=100, res_y=75"
 
 setlocal disableDelayedExpansion
@@ -34,20 +34,27 @@ set "cos(x)=(%cos(x)%)"
 
 :: Once per aspect ratio change
 call :matrix4x4.perspective_fov_rh 200 341 3 256 projection
+echo %projection%
 
 :: once per camera move
 call :matrix4x4.look_at_rh "0 0 2560" "0 0 0" "0 256 0" view
 call :matrix4x4.mul "!view!" "!projection!" view
+echo %view%
+
 set /a "__x=0, __y=0, yaw=200, pitch=300"
 
 for /L %%. in () do (
     set /a "yaw+=10, pitch+=15"
 
     call :matrix4x4.trans "!__x! !__y! 0" world
+    echo %world%
     call :matrix4x4.yaw_pitch_roll !yaw! !pitch! 0 rotation
+    echo %rotation%
     call :matrix4x4.mul "!world!" "!rotation!" world
+    echo %world%
 
     call :matrix4x4.mul "!world!" "!view!" transform
+    echo %transform%
 
     set /a "counter=0"
     for %%# in (
