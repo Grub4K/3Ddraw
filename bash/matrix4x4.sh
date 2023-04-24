@@ -27,6 +27,26 @@ matrix4x4.mul() {
 }
 
 # (eye: vector3, target: vector3, up: vector3) -> matrix4x4
+matrix4x4.lookAtLH() {
+    vector3.sub "$2" "$1" zAxis
+    vector3.norm "${globals[zAxis]}" zAxis
+
+    vector3.cross "$3" "${globals[zAxis]}" xAxis
+    vector3.norm "${globals[xAxis]}" xAxis
+
+    vector3.cross "${globals[zAxis]}" "${globals[xAxis]}" yAxis
+    vector3.norm "${globals[yAxis]}" yAxis
+
+    vector3.dot "${globals[xAxis]}" "$1" ex
+    vector3.dot "${globals[yAxis]}" "$1" ey
+    vector3.dot "${globals[zAxis]}" "$1" ez
+
+    local -a data=( ${globals[xAxis]} ${globals[yAxis]} ${globals[zAxis]} )
+    globals[$4]="${data[0]} ${data[3]} ${data[6]} 0 ${data[1]} ${data[4]} ${data[7]} 0 ${data[2]} ${data[5]} ${data[8]} 0 -${globals[ex]} -${globals[ey]} -${globals[ez]} $one"
+}
+
+
+# (eye: vector3, target: vector3, up: vector3) -> matrix4x4
 matrix4x4.lookAtRH() {
     vector3.sub "$1" "$2" zAxis
     vector3.norm "${globals[zAxis]}" zAxis
@@ -46,6 +66,16 @@ matrix4x4.lookAtRH() {
 
     local -a data=( ${globals[xAxis]} ${globals[yAxis]} ${globals[zAxis]} )
     globals[$4]="${data[0]} ${data[3]} ${data[6]} 0 ${data[1]} ${data[4]} ${data[7]} 0 ${data[2]} ${data[5]} ${data[8]} 0 ${globals[ex]} ${globals[ey]} ${globals[ez]} $one"
+}
+
+# (fov: decimal, aspect: decimal, zNear: decimal, zFar: decimal) -> matrix4x4
+matrix4x4.perspectiveFovLH() {
+    local -i tan fRange
+    sin "$(( $1 >> 1 ))" sin
+    cos "$(( $1 >> 1 ))" cos
+    (( tan = (${globals[cos]} << radix) / ${globals[sin]} ))
+
+    globals[$5]="$(( (tan << radix) / $2 )) 0 0 0 0 $tan 0 0 0 0 $(( -($4 << radix) / ($3 - $4) )) $one 0 0 $(( ($3 * $4) / ($3 - $4) )) 0"
 }
 
 # (fov: decimal, aspect: decimal, zNear: decimal, zFar: decimal) -> matrix4x4
@@ -86,12 +116,10 @@ matrix4x4.rotZ() {
 
 # (yaw: decimal, pitch: decimal, roll: decimal) -> matrix4x4
 matrix4x4.yawPitchRoll() {
-    matrix4x4.rotX "$2" "$4"
-    matrix4x4.rotY "$3" temp
-    echo "${globals[$4]}"
-    echo "${globals[temp]}"
+    matrix4x4.rotZ "$3" "$4"
+    matrix4x4.rotX "$2" temp
     matrix4x4.mul "${globals[$4]}" "${globals[temp]}" "$4"
-    matrix4x4.rotZ "$1" temp
-    echo "${globals[temp]}"
-    matrix4x4.mul "${globals[temp]}" "${globals[$4]}" "$4"
+    matrix4x4.rotY "$1" temp
+    matrix4x4.mul "${globals[$4]}" "${globals[temp]}" "$4"
+
 }
