@@ -1,28 +1,29 @@
 #!/bin/env bash
 
-# source ./math.sh
+declare -i radix=8
 declare -A globals
-declare -i pi=205887
 
-sin() {
-    globals[$2]="$( echo "s(%d / (1 >> 16)) * (1 << 16)" | bc -l )"
-}
+source ./math.sh
 
 main() {
-    local -i current width=100 height=20
+    local -i current width=300 height=50
     local -a values
 
-    (( current = 0, step = (pi << 1) / 100 ))
-    sin "$current" res
-
-    values+=( "$(( (height>>1) * globals[res] / one + (height>>1) ))" )
+    values=()
+    for (( current = 0; current < (pi << 1); current += (pi << 1) / width )); do
+        cos "$current" res
+        values+=( "$(( (height>>1) * globals[res] / -one + (height>>1) + 2 ))" )
+    done
 
     clear
-    for (( i = 0; i < height; i++ )); do
+    for (( i = 0; i < height+2; i++ )); do
         printf '\n'
     done
-    for (( i = 0; i < ${#values}; i++ )); do
-        printf '\e[%d;%dH#' "$i" "${values[$i]}"
+    printf '\e7'
+    for (( i = 0; i < ${#values[@]}; i++ )); do
+        printf '\e[%d;%dH#' "$(( values[$i] + 2 ))" "$i"
     done
-    printf '\e[0;%dH' "$height"
+    printf '\e8\n'
 }
+
+main
