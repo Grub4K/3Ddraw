@@ -3,7 +3,8 @@
 declare -i radix=8
 declare -A globals
 
-source ./math.sh
+SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+source "${SCRIPT_DIR}/../bash/math.sh"
 
 main() {
     local -i current width=300 height=50

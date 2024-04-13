@@ -13,6 +13,7 @@ Try to use a square font or font size.
     - A different renderer can be used as import in `3Ddraw.bat`
 
 ## Utils
-- `conv.py`, a conversion tool that translates numbers to the internal radix 8 format
-- `taylor.py`, a tool to determine the accuracy of the sine taylor polynomial abstraction
-- `test_div.py`, a tool to determine the accuracy of the two obvious division algorithms
+- [`conv.py`](<./utils/conv.py>), a conversion tool that translates numbers to the internal radix 8 format
+- [`test_div.py`](<./utils/test_div.py>), a tool to determine the accuracy of the two obvious division algorithms
+- [`plot_func.sh`](<./utils/plot_func.sh>), a plotting tool for visualizing a functions results
+- [`speed_analysis.sh`](<./utils/speed_analysis.sh>), a comparison between different bash calling conventions and unrolling vs no unrolling
